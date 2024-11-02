@@ -67,9 +67,9 @@ def evaluate_and_save_report(model, test_loader, model_name):
     report = classification_report(all_labels, all_preds, output_dict=True)
     report_df = pd.DataFrame(report).transpose()
 
-    # Ensure the outputs directory exists
-    output_dir = "outputs"
-    os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
+
+    output_dir = "./EEG-EMOTION/outputs"
+    os.makedirs(output_dir, exist_ok=True) 
 
     output_file = os.path.join(output_dir, f"{model_name}_classification_report.csv")
     report_df.to_csv(output_file)

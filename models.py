@@ -16,6 +16,7 @@ class DNN(nn.Module):
         x = F.dropout(F.relu(self.fc3(x)),0.5)
         x = self.fc4(x)
         return x
+    
 "Reference: https://iopscience.iop.org/article/10.1088/1742-6596/2024/1/012044/pdf"
 class CNN(nn.Module):
     def __init__(self, num_classes=3):
@@ -41,6 +42,7 @@ class CNN(nn.Module):
         x = self.fc3(x)
         x = self.fc4(x)
         return x
+    
 "Reference: https://aircconline.com/csit/papers/vol11/csit112328.pdf"
 class CNN_GRU(nn.Module):
     def __init__(self, num_classes=4):
@@ -86,6 +88,7 @@ class CNN_GRU(nn.Module):
         x = self.fc2(x) 
         
         return x
+    
 "Reference: https://aircconline.com/csit/papers/vol11/csit112328.pdf"
 class CNN_LSTM(nn.Module):
     def __init__(self, num_classes=3):
@@ -130,6 +133,7 @@ class CNN_LSTM(nn.Module):
         x = self.fc2(x)  
         
         return x
+    
 "Reference: https://www.frontiersin.org/journals/systems-neuroscience/articles/10.3389/fnsys.2020.00043"
 class CNN_SAE_DNN(nn.Module):
     def __init__(self, num_classes=3):

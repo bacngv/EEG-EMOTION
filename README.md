@@ -49,7 +49,7 @@ The project comprises the following files and modules:
 2. **Run the Model**: Execute the following command in the terminal to run the desired model. Below is an example command for running the CNN-GRU model:
 
 ```bash
-python main.py --model cnn_gru --data 'emotions.csv' --batch_size 32 --lr 0.001 --epochs 50
+python ./EEG-EMOTION/main.py --model cnn_gru --data './EEG-EMOTION/data/emotions.csv' --batch_size 32 --lr 0.001 --epochs 50
 ```
 
 ### Command-Line Parameters
