@@ -1,4 +1,3 @@
-# models.py
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -42,9 +41,6 @@ class CNN(nn.Module):
         x = self.fc3(x)
         x = self.fc4(x)
         return x
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 "Reference: https://aircconline.com/csit/papers/vol11/csit112328.pdf"
 class CNN_GRU(nn.Module):
     def __init__(self, num_classes=4):

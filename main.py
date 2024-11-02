@@ -1,34 +1,23 @@
-# main.py
 import argparse
 import torch
-from data_loader import load_data
-from visualization import (
-    plot_pie_chart,
-    plot_time_series,
-    plot_power_spectral_density,
-    plot_correlation_heatmap,
-    plot_significant_non_significant_features,
-    plot_tsne,
-)
-from models import DNN, CNN, CNN_GRU, CNN_LSTM, CNN_SAE_DNN
-from training import train_model, evaluate_model
+from data_loader import DataLoaderModule
+from models import DNN, CNN, CNN_GRU, CNN_LSTM, CNN_SAE_DNN 
+from train import train_model, evaluate_model
 
-def main(args):
-    data_loader = load_data(args.data)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', type=str, choices=['dnn', 'cnn', 'cnn_gru', 'cnn_lstm', 'cnn_sae_dnn'], required=True, help='Model to train (dnn, cnn, etc.)')
+    parser.add_argument('--data', type=str, required=True, help='Path to the dataset')
+    parser.add_argument('--batch_size', type=int, default=64, help='Batch size for training')
+    parser.add_argument('--lr', type=float, default=0.001, help='Learning rate')
+    parser.add_argument('--epochs', type=int, default=70, help='Number of epochs')
     
-    # Visualize data
-    plot_pie_chart(data_loader.X)
-    plot_time_series(data_loader.X, 0)  # Sample index
-    plot_power_spectral_density(data_loader.X.iloc[0], args.sampling_rate)
-    plot_correlation_heatmap(data_loader.X)
+    args = parser.parse_args()
 
-    # Visualize significant and non-significant features by emotion
-    plot_significant_non_significant_features(data_loader.X)
+    data_loader = DataLoaderModule(args.data, batch_size=args.batch_size)
+    train_loader, test_loader = data_loader.get_loaders()
 
-    # t-SNE visualization
-    plot_tsne(data_loader.X)
-
-    # Model selection
+    model_name = args.model
     if args.model == 'dnn':
         model = DNN()
     elif args.model == 'cnn':
@@ -40,22 +29,9 @@ def main(args):
     elif args.model == 'cnn_sae_dnn':
         model = CNN_SAE_DNN()
     else:
-        raise ValueError("Model not recognized. Please choose 'dnn', 'cnn', 'cnn_gru', 'cnn_lstm', or 'cnn_sae_dnn'.")
+        raise ValueError("Invalid model type")
 
-    # Training
-    criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    train_model(model, data_loader.train_loader, criterion, optimizer, num_epochs=args.epochs)
-
-    # Evaluation
-    evaluate_model(model, data_loader.test_loader)
+    train_model(model, train_loader, test_loader, args.epochs, args.lr, model_name)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Train a model on EEG data.')
-    parser.add_argument('--data', type=str, required=True, help='Path to the dataset CSV file.')
-    parser.add_argument('--model', type=str, choices=['dnn', 'cnn', 'cnn_gru', 'cnn_lstm', 'cnn_sae_dnn'], required=True, help='Model to use for training.')
-    parser.add_argument('--sampling_rate', type=int, default=256, help='Sampling rate for EEG data.')
-    parser.add_argument('--epochs', type=int, default=10, help='Number of training epochs.')
-
-    args = parser.parse_args()
-    main(args)
+    main()
